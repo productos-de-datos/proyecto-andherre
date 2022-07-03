@@ -1,18 +1,21 @@
+"""
+Módulo de limpieza de datos.
+-------------------------------------------------------------------------------
+En este módulo se toman los archivos .csv de la carpeta raw y se concatenan en un único archivo precios-horarios.csv,
+con la finalidad de tener un vector de datos de precio por cada hora de cada día.
+>>> clean_data()
+"""
+
 def clean_data():
     """Realice la limpieza y transformación de los archivos CSV.
-
     Usando los archivos data_lake/raw/*.csv, cree el archivo data_lake/cleansed/precios-horarios.csv.
     Las columnas de este archivo son:
-
     * fecha: fecha en formato YYYY-MM-DD
     * hora: hora en formato HH
     * precio: precio de la electricidad en la bolsa nacional
-
     Este archivo contiene toda la información del 1997 a 2021.
-    raise NotImplementedError("Implementar esta función")
-
-
     """
+    #raise NotImplementedError("Implementar esta función")
     import os
     import pandas as pd
 
@@ -38,11 +41,11 @@ def clean_data():
 
     archivo_concat_melt.to_csv(f'data_lake/cleansed/precios-horarios.csv', header = True, index = False)
 
+    return 'melo'
 
 if __name__ == "__main__":
     import doctest
     clean_data()
     doctest.testmod()
-
 
 
