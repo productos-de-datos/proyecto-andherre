@@ -4,7 +4,9 @@ Módulo de gráfica precios promedio mensuales.
 En este módulo se carga el archivo precios-mensuales.csv,
 y se efectúa una gráfica para observar el comportamiento general del valor
 de la electridad en la bolsa de valores.
+
 >>> make_monthly_prices_plot()
+
 """
 
 def make_monthly_prices_plot():
