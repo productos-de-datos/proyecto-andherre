@@ -21,23 +21,26 @@ def test_train_datasets_1(data_frame, porcentaje):
 
 
 def train_daily_model():
-   
+    """Entrena el modelo de pronóstico de precios diarios.
+    Con las features entrene el modelo de proóstico de precios diarios y
+    salvelo en models/precios-diarios.pkl
+    """
     #raise NotImplementedError("Implementar esta función")
     import os
     import pickle
     import pandas as pd
     import statsmodels.api as st
 
-    price_daily = pd.read_csv('data_lake/business/features/precios_diarios.csv')
-    price_daily['fecha'] = pd.to_datetime(price_daily['fecha'], format='%Y-%m-%d')
-    price_daily['dia_mes'] = pd.to_numeric(price_daily['dia_mes'])
-    price_daily = price_daily.set_index('fecha')
-    price_daily = price_daily.asfreq('D')
-    price_daily = price_daily.sort_index()
-    price_daily.index = pd.DatetimeIndex(price_daily.index).to_period('D')
+    precios_diarios = pd.read_csv('data_lake/business/features/precios_diarios.csv')
+    precios_diarios['fecha'] = pd.to_datetime(precios_diarios['fecha'], format='%Y-%m-%d')
+    precios_diarios['dia_mes'] = pd.to_numeric(precios_diarios['dia_mes'])
+    precios_diarios = precios_diarios.set_index('fecha')
+    precios_diarios = precios_diarios.asfreq('D')
+    precios_diarios = precios_diarios.sort_index()
+    precios_diarios.index = pd.DatetimeIndex(precios_diarios.index).to_period('D')
 
     # Se parten los datos para entrenamiento y prueba
-    data_train, data_test = test_train_datasets_1(price_daily, 0.3)
+    data_train, data_test = test_train_datasets_1(precios_diarios, 0.3)
 
     forecaster = st.tsa.statespace.SARIMAX(
     endog = data_train[['precio']],
@@ -53,3 +56,4 @@ if __name__ == "__main__":
     import doctest
     train_daily_model()
     doctest.testmod()
+
