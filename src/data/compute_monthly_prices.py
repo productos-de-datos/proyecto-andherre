@@ -15,21 +15,15 @@ def compute_monthly_prices():
    
     import pandas as pd
 
-    price_hourly = pd.read_csv(f'data_lake/cleansed/precios-horarios.csv')
-    price_hourly['fecha'] = pd.to_datetime(price_hourly['fecha'])
-    price_hourly.set_index('fecha', inplace = True)
-    price_month = price_hourly.resample('M').mean()
-    price_month_nohour = price_month.drop(['hora'], axis=1)
-    price_month_nohour.to_csv(f'data_lake/business/precios-mensuales.csv', header = True, index = True)
+    precios_horarios = pd.read_csv(f'data_lake/cleansed/precios-horarios.csv')
+    precios_horarios['fecha'] = pd.to_datetime(precios_horarios['fecha'])
+    precios_horarios.set_index('fecha', inplace = True)
+    precios_mensuales = precios_horarios.resample('M').mean()
+    precios_mensuales_sin_hora = precios_mensuales.drop(['hora'], axis=1)
+    precios_mensuales_sin_hora.to_csv(f'data_lake/business/precios-mensuales.csv', header = True, index = True)
 
 
 if __name__ == "__main__":
     import doctest
     compute_monthly_prices()
-    doctest.testmod()
-
-
-if __name__ == "__main__":
-    import doctest
-
     doctest.testmod()
