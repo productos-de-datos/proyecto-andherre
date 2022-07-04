@@ -17,35 +17,44 @@ def test_train_datasets_1(data_frame, porcentaje):
     data_train = data_frame[:-n]
     data_test  = data_frame[-n:]
     return data_train, data_test
-    
+
 def make_forecasts():
+    """Construya los pronosticos con el modelo entrenado final.
+    Cree el archivo data_lake/business/forecasts/precios-diarios.csv. Este
+    archivo contiene tres columnas:
+    * La fecha.
+    * El precio promedio real de la electricidad.
+    * El pronóstico del precio promedio real.
+    """
+    #raise NotImplementedError("Implementar esta función")
 
     import pandas as pd
     import os
     import pickle
+    #from sklearn.ensemble import RandomForestRegressor
+    #from skforecast.ForecasterAutoreg import ForecasterAutoreg
 
-    daily_prices = pd.read_csv('data_lake/business/features/precios_diarios.csv')
-    daily_prices['fecha'] = pd.to_datetime(daily_prices['fecha'], format='%Y-%m-%d')
-    daily_prices['dia_mes'] = pd.to_numeric(daily_prices['dia_mes'])
-    daily_prices = daily_prices.set_index('fecha')
-    daily_prices = daily_prices.asfreq('D')
-    daily_prices = daily_prices.sort_index()
-    daily_prices.index = pd.DatetimeIndex(daily_prices.index).to_period('D')
+    precios_diarios = pd.read_csv('data_lake/business/features/precios_diarios.csv')
+    precios_diarios['fecha'] = pd.to_datetime(precios_diarios['fecha'], format='%Y-%m-%d')
+    precios_diarios['dia_mes'] = pd.to_numeric(precios_diarios['dia_mes'])
+    precios_diarios = precios_diarios.set_index('fecha')
+    precios_diarios = precios_diarios.asfreq('D')
+    precios_diarios = precios_diarios.sort_index()
+    precios_diarios.index = pd.DatetimeIndex(precios_diarios.index).to_period('D')
 
-    data_train, data_test = test_train_datasets_1(daily_prices, 0.3)
+    data_train, data_test = test_train_datasets_1(precios_diarios, 0.3)
 
     with open('src/models/precios-diarios.pkl', 'rb') as file:
         estimador = pickle.load(file)
-
     #estimador =  pickle.load('src/models/precios-diarios.pkl', 'rb')
     
-    steps = len(data_test)
+    pasos = len(data_test)
 
-    projected_price = estimador.forecast(steps, exog = data_test[['dia_mes']])
+    precio_proyectado = estimador.forecast(pasos, exog = data_test[['dia_mes']])
 
-    predictions =  pd.DataFrame(projected_price)
+    predicciones =  pd.DataFrame(precio_proyectado)
 
-    data_pred = pd.concat([data_test.loc[:, ['precio']], predictions], axis=1, join = 'inner')
+    data_pred = pd.concat([data_test.loc[:, ['precio']], predicciones], axis=1, join = 'inner')
     data_pred = data_pred.reset_index()
     data_pred.columns = ['fecha', 'precio_promedio_real', 'precio_promedio_pred']
 
@@ -54,5 +63,4 @@ def make_forecasts():
 if __name__ == "__main__":
     import doctest
     make_forecasts()
-    doctest.testmod() 
-
+    doctest.testmod()
