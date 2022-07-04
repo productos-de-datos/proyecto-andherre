@@ -1,6 +1,17 @@
+"""
+Módulo de cálculo de precios promedio mensuales.
+-------------------------------------------------------------------------------
+En este módulo se toma el archivo precios-horarios.csv, con la finalidad de obtener por cada mes el precio
+promedio que tuvo la electricidad en la bolsa nacional.
+
+>>> compute_monthly_prices()
+
+
+"""
+
 def compute_monthly_prices():
     """Compute los precios promedios mensuales.
-
+    
     Usando el archivo data_lake/cleansed/precios-horarios.csv, compute el prcio
     promedio mensual. Las
     columnas del archivo data_lake/business/precios-mensuales.csv son:
@@ -9,10 +20,8 @@ def compute_monthly_prices():
 
     * precio: precio promedio mensual de la electricidad en la bolsa nacional
 
-    raise NotImplementedError("Implementar esta función")
-
     """
-   
+    #raise NotImplementedError("Implementar esta función")
     import pandas as pd
 
     precios_horarios = pd.read_csv(f'data_lake/cleansed/precios-horarios.csv')
