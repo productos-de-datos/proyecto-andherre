@@ -1,17 +1,11 @@
+"""
+Modulo de creación entrenamiento de modelo
+----------------------------------------
+En este módulo se parten los datos en entrenamiento y prueba, y se pronostican los datos de prueba
+obteniendo unos precios promedio diarios pronosticados
+>>> train_daily_model()
+"""
 
-"""Entrena el modelo de pronóstico de precios diarios.
-
-    Con las features entrene el modelo de proóstico de precios diarios y
-    salvelo en models/precios-diarios.pkl
-
-    raise NotImplementedError("Implementar esta función")   
-    
-    Entrena el modelo de pronóstico de precios diarios.
-    Con las features entrene el modelo de proóstico de precios diarios y
-    salvelo en models/precios-diarios.pkl
-    
-    """
-    
 
 def test_train_datasets_1(data_frame, porcentaje):
     n = round(len(data_frame)*porcentaje)
@@ -56,4 +50,3 @@ if __name__ == "__main__":
     import doctest
     train_daily_model()
     doctest.testmod()
-
