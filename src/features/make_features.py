@@ -22,14 +22,15 @@ def make_features():
     doctest.testmod()
     raise NotImplementedError("Implementar esta función")
     """
-
+    
     import pandas as pd
 
-    price_daily = pd.read_csv('data_lake/business/precios-diarios.csv')
-    price_daily['fecha'] = pd.to_datetime(price_daily['fecha'])
-    price_daily['dia_mes'] = price_daily['fecha'].dt.day
-    price_daily['dia_mes_binario'] = (price_daily['dia_mes']>20).astype(int)
-    price_daily.to_csv('data_lake/business/features/precios_diarios.csv', index = False)
+    precios_diarios = pd.read_csv('data_lake/business/precios-diarios.csv')
+    precios_diarios['fecha'] = pd.to_datetime(precios_diarios['fecha'])
+    precios_diarios['dia_mes'] = precios_diarios['fecha'].dt.day
+    precios_diarios['dia_mes_binario'] = (precios_diarios['dia_mes']>20).astype(int)
+    precios_diarios.to_csv('data_lake/business/features/precios_diarios.csv', index = False)
+
 
 if __name__ == "__main__":
     import doctest
