@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
 
 """
-raise NotImplementedError("Implementar esta función")
+#raise NotImplementedError("Implementar esta función")
 
 import luigi
 from luigi import Task, LocalTarget
