@@ -1,17 +1,12 @@
 
-"""Construya los pronosticos con el modelo entrenado final.
+"""
+Modulo de creación de pronósticos
+----------------------------------------
+Este modulo crea el archivo .csv que contiene los precios promedio diarios reales y pronosticados
 
-    Cree el archivo data_lake/business/forecasts/precios-diarios.csv. Este
-    archivo contiene tres columnas:
+>>> make_forecasts()
 
-    * La fecha.
-
-    * El precio promedio real de la electricidad.
-
-    * El pronóstico del precio promedio real.
-    raise NotImplementedError("Implementar esta función")
-
-    """
+"""
 def test_train_datasets_1(data_frame, porcentaje):
     n = round(len(data_frame)*porcentaje)
     data_train = data_frame[:-n]
