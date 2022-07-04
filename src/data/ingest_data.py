@@ -18,11 +18,11 @@ def ingest_data():
     import os
     import urllib.request
 
-    initial_year = 1995
-    final_year = 2021
-    range_year = list(range(initial_year, final_year + 1, 1))
+    anio_inicial = 1995
+    anio_final = 2021
+    rango_anios = list(range(anio_inicial, anio_final + 1, 1))
 
-    for anio in range_year:
+    for anio in rango_anios:
         try:
             archivo = open(f'data_lake/landing/{anio}.xlsx', 'wb')
             ruta = urllib.request.urlopen(f'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{anio}.xlsx?raw=true')
