@@ -28,16 +28,15 @@ import pandas as pd
 def compute_daily_prices():
 
 
-    price_hourly = pd.read_csv('data_lake/cleansed/precios-horarios.csv')
-    price_hourly = price_hourly.groupby('fecha').mean()
-    price_hourly_nohour = price_hourly.drop(['hora'], axis=1)
-    price_hourly_nohour.to_csv(
+    precios_horarios = pd.read_csv('data_lake/cleansed/precios-horarios.csv')
+    precios_diarios = precios_horarios.groupby('fecha').mean()
+    precios_diarios_sin_hora = precios_diarios.drop(['hora'], axis=1)
+    precios_diarios_sin_hora.to_csv(
                                     'data_lake/business/precios-diarios.csv',
                                      header = True, index = True
                                      )
 
-
 if __name__ == "__main__":
     import doctest
-
+    compute_daily_prices()
     doctest.testmod()
