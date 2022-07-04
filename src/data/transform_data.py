@@ -1,5 +1,5 @@
-def transform_data():
-    """Transforme los archivos xls a csv.
+
+"""Transforme los archivos xls a csv.
 
     Transforme los archivos data_lake/landing/*.xls a data_lake/raw/*.csv. Hay
     un archivo CSV por cada archivo XLS en la capa landing. Cada archivo CSV
@@ -8,6 +8,8 @@ def transform_data():
     raise NotImplementedError("Implementar esta función")
 
     """
+def transform_data():
+    
     import subprocess
     import os
 
@@ -16,29 +18,29 @@ def transform_data():
 
     import pandas as pd
 
-    contents_landing = os.listdir('data_lake/landing')
-    initial_year = 1995
-    final_year = 2021
+    contenido_landing = os.listdir('data_lake/landing')
+    anio_inicial = 1995
+    anio_final = 2021
 
-    for elemento in range(initial_year, final_year + 1, 1):
+    for elemento in range(anio_inicial, anio_final + 1, 1):
         
-        archivo = pd.read_excel(f'data_lake/landing/{contents_landing[elemento-initial_year]}', skiprows=3)
+        archivo = pd.read_excel(f'data_lake/landing/{contenido_landing[elemento-anio_inicial]}', skiprows=3)
 
         if archivo.columns[0] == 'Fecha':
             if archivo.shape[1] > 25:
                 archivo = archivo.iloc[:, 0:25]         
         else:
-            archivo = pd.read_excel(f'data_lake/landing/{contents_landing[elemento-1995]}', skiprows=2)
+            archivo = pd.read_excel(f'data_lake/landing/{contenido_landing[elemento-1995]}', skiprows=2)
             if archivo.columns[0] == 'Fecha':
                 if archivo.shape[1] > 25:
                     archivo = archivo.iloc[:, 0:25]
             else:
-                archivo = pd.read_excel(f'data_lake/landing/{contents_landing[elemento-1995]}', skiprows=1)
+                archivo = pd.read_excel(f'data_lake/landing/{contenido_landing[elemento-1995]}', skiprows=1)
                 if archivo.columns[0] == 'Fecha':
                     if archivo.shape[1] > 25:
                         archivo = archivo.iloc[:, 0:25]
                 else:
-                    archivo = pd.read_excel(f'data_lake/landing/{contents_landing[elemento-1995]}', skiprows=0)
+                    archivo = pd.read_excel(f'data_lake/landing/{contenido_landing[elemento-1995]}', skiprows=0)
                     if archivo.columns[0] == 'Fecha':
                         if archivo.shape[1] > 25:
                             archivo = archivo.iloc[:, 0:25]                
