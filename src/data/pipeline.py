@@ -11,7 +11,7 @@ En luigi llame las funciones que ya creo.
 
 if __name__ == "__main__":
     
-    raise NotImplementedError("Implementar esta función")
+    
 
 if __name__ == "__main__":
     import doctest
@@ -20,6 +20,8 @@ if __name__ == "__main__":
 
 
 """
+raise NotImplementedError("Implementar esta función")
+
 import luigi
 from luigi import Task, LocalTarget
 import ingest_data
