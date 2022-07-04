@@ -1,9 +1,18 @@
+"""
+Modulo de creación de directorios
+----------------------------------------
+Este modulo crea el esquema de carpetas que servirán para contener los diferentes datos y resultados
+
+>>> create_data_lake()
+
+"""
+
 def create_data_lake():
     """Cree el data lake con sus capas.
 
     Esta función debe crear la carpeta `data_lake` en la raiz del proyecto. El data lake contiene
     las siguientes subcarpetas:
-
+    
     ```
     .
     |
@@ -16,11 +25,12 @@ def create_data_lake():
               |    |___ figures/
               |___ features/
               |___ forecasts/
-
     ```
-    raise NotImplementedError("Implementar esta función")
+
+
 
     """
+    #raise NotImplementedError("Implementar esta función")
 
     import os
 
@@ -36,5 +46,5 @@ def create_data_lake():
 
 if __name__ == "__main__":
     import doctest
-
+    create_data_lake()
     doctest.testmod()
