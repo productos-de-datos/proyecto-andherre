@@ -3,7 +3,9 @@ Módulo de limpieza de datos.
 -------------------------------------------------------------------------------
 En este módulo se toman los archivos .csv de la carpeta raw y se concatenan en un único archivo precios-horarios.csv,
 con la finalidad de tener un vector de datos de precio por cada hora de cada día.
+
 >>> clean_data()
+
 """
 
 def clean_data():
@@ -47,5 +49,3 @@ if __name__ == "__main__":
     import doctest
     clean_data()
     doctest.testmod()
-
-
