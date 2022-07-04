@@ -20,13 +20,13 @@ def clean_data():
     import pandas as pd
 
     contenido_raw = os.listdir('data_lake/raw')
-    initial_year = 1995
-    final_year = 2021
+    anio_inicial = 1995
+    anio_final = 2021
 
-    archivo_inicial = pd.read_csv(f'data_lake/raw/{initial_year}.csv')
+    archivo_inicial = pd.read_csv(f'data_lake/raw/{anio_inicial}.csv')
 
-    for elemento in range(initial_year + 1, final_year + 1, 1):
-        if elemento == initial_year + 1:
+    for elemento in range(anio_inicial + 1, anio_final + 1, 1):
+        if elemento == anio_inicial + 1:
             archivo = pd.read_csv(f'data_lake/raw/{elemento}.csv')
             archivo_concat = pd.concat([archivo_inicial, archivo], ignore_index = True)
         else:
