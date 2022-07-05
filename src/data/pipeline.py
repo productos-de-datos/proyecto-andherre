@@ -8,7 +8,6 @@ de los valores de la electricidad en la bolsa.
 """
 
 """
-
 Construya un pipeline de Luigi que:
 * Importe los datos xls
 * Transforme los datos xls a csv
@@ -16,79 +15,35 @@ Construya un pipeline de Luigi que:
 * Calcule los precios promedios diarios
 * Calcule los precios promedios mensuales
 En luigi llame las funciones que ya creo.
-
 """
-
+import luigi
+from luigi import Task, LocalTarget
 import ingest_data
 import transform_data
 import clean_data
 import compute_daily_prices
 import compute_monthly_prices
-import luigi
-#import sys
 
-#sys.path.append("src/data")
-
-class IngestData(luigi.Task):
-
+class IngestTransformCleanData(Task):
     def output(self):
-        return luigi.LocalTarget('ingest.txt')
-
+        return LocalTarget(f'data_lake/cleansed/precios-horarios.csv')
     def run(self):
-        with self.output().open('w') as f:
-            ingest_data.ingest_data()
-        
-class TransformData(luigi.Task):
-    
+        ingest_data.ingest_data()
+        transform_data.transform_data()
+        clean_data.clean_data()
+
+class ComputeDailyMonthly(Task):
     def requires(self):
-        return IngestData()
-    
+        return IngestTransformCleanData()
     def output(self):
-        return luigi.LocalTarget("TransformData.txt")
-
+        return LocalTarget([f'data_lake/business/precios-diarios.csv', f'data_lake/business/precios-mensuales.csv'])
     def run(self):
-        with self.output().open("w") as outfile:
-            transform_data.transform_data()   
+        compute_daily_prices.compute_daily_prices()
+        compute_monthly_prices.compute_monthly_prices()
 
-class cleanData(luigi.Task):
-    def requires(self):
-        return TransformData()
-
-    def output(self):
-        return luigi.LocalTarget("cleanData.txt")
-
-    def run(self):
-        with self.output().open("w") as outfile:
-            clean_data.clean_data()
-
-class dailyReports(luigi.Task):
-    def requires(self):
-        return cleanData()
-
-    def output(self):
-        return luigi.LocalTarget("data_lake/business/precios-dias.csv")
-
-    def run(self):
-        with self.output().open("w") as outfile:
-            compute_daily_prices.compute_daily_prices()
-            
-class monthlyReports(luigi.Task):
-    def requires(self):
-        return cleanData()
-
-    def output(self):
-        return luigi.LocalTarget("data_lake/business/precios-mes.csv")
-
-    def run(self):
-        with self.output().open("w") as outfile:
-            compute_monthly_prices.compute_monthly_prices()
-
-class reports_prices(luigi.Task):
-    def requires(self):
-        return [dailyReports(), monthlyReports()]
-    
 if __name__ == "__main__":
     import doctest
 
-    luigi.run(["reports_prices","--local-scheduler"])
     doctest.testmod()
+
+    luigi.run(['ComputeDailyMonthly', "--local-scheduler"])
