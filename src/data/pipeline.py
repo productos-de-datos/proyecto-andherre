@@ -1,26 +1,23 @@
 """
-Construya un pipeline de Luigi que:
+Módulo de pipeline.
+-------------------------------------------------------------------------------
+En este módulo se elabora un Pipeline con luigi, con la finalidad de correr varios scripts en uno solo.
+Con este script se importan, transforman, limpian y calculan los promedios diarios y mensuales
+de los valores de la electricidad en la bolsa.
+>>> pipeline()
+"""
 
+"""
+
+Construya un pipeline de Luigi que:
 * Importe los datos xls
 * Transforme los datos xls a csv
 * Cree la tabla unica de precios horarios.
 * Calcule los precios promedios diarios
 * Calcule los precios promedios mensuales
-
 En luigi llame las funciones que ya creo.
 
-if __name__ == "__main__":
-    
-    
-
-if __name__ == "__main__":
-    import doctest
-
-    doctest.testmod()
-
-
 """
-#raise NotImplementedError("Implementar esta función")
 
 import luigi
 from luigi import Task, LocalTarget
