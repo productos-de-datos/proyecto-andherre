@@ -7,35 +7,37 @@ En este módulo se descargan los datos externos y se almacenan en la carpeta lan
 
 """
 
+import urllib.request
+
 def ingest_data():
-    """Ingeste los datos externos a la capa landing del data lake.
-    Del repositorio jdvelasq/datalabs/precio_bolsa_nacional/xls/ descarge los
-    archivos de precios de bolsa nacional en formato xls a la capa landing. La
-    descarga debe realizarse usando únicamente funciones de Python.
     """
-    #raise NotImplementedError("Implementar esta función")
+    Realiza la ingesta de datos
+    """
+    # raise NotImplementedError("Implementar esta función")
+    get_urls()
+    get_files()
 
-    import os
-    import urllib.request
+def get_urls():
+    with open('urls.txt','w') as f:
 
-    anio_inicial = 1995
-    anio_final = 2021
-    rango_anios = list(range(anio_inicial, anio_final + 1, 1))
+        for year in range(1995,2022):
+            url = 'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/'
+            if year not in [2016,2017]:
+                url = url + str(year)+'.xlsx?raw=true'
+                f.write(url)
+                f.write('\n')
+            else:
+                url = url + str(year)+'.xls?raw=true'    
+                f.write(url)
+                f.write('\n')
 
-    for anio in rango_anios:
-        try:
-            archivo = open(f'data_lake/landing/{anio}.xlsx', 'wb')
-            ruta = urllib.request.urlopen(f'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{anio}.xlsx?raw=true')
-            archivo.write(ruta.read())
-            archivo.close()
-        except:
-            archivo.close()
-            os.remove(f'data_lake/landing/{anio}.xlsx')
-
-            archivo = open(f'data_lake/landing/{anio}.xls', 'wb')
-            ruta = urllib.request.urlopen(f'https://github.com/jdvelasq/datalabs/blob/master/datasets/precio_bolsa_nacional/xls/{anio}.xls?raw=true')
-            archivo.write(ruta.read())
-            archivo.close()
+def get_files():
+    #cwd=os.getcwd()
+    landing= 'data_lake/landing/'
+    #landing='./data_lake/landing/'
+    with open('./urls.txt','r') as f:
+        for i in f.readlines():
+            urllib.request.urlretrieve(i,landing+i.split('/')[-1].split('?')[0])
 
 if __name__ == "__main__":
     import doctest
