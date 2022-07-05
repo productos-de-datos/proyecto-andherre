@@ -1,9 +1,12 @@
 """
 Modulo de creación entrenamiento de modelo
+
 ----------------------------------------
 En este módulo se parten los datos en entrenamiento y prueba, y se pronostican los datos de prueba
 obteniendo unos precios promedio diarios pronosticados
+
 >>> train_daily_model()
+
 """
 
 
