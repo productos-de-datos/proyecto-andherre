@@ -1,12 +1,7 @@
-"""
-Módulo de limpieza de datos.
--------------------------------------------------------------------------------
-En este módulo se toman los archivos .csv de la carpeta raw y se concatenan en un único archivo precios-horarios.csv,
-con la finalidad de tener un vector de datos de precio por cada hora de cada día.
+""""Lea con la libreria glob todos los CSV en la carpeta data_lake/raw/ los une con append y finalmente los convierte
+a pandas, elimina las filas vacias y posteriormente con la funcion de pandas melt organiza los datos
+con columnas fecha, hora y precio. organiza su formato, filtra desde 1997 a 2021 y exporta en csv el archivo procesado en data_lake/cleansed/ """
 
->>> clean_data()
-
-"""
 
 def clean_data():
     """Realice la limpieza y transformación de los archivos CSV.
@@ -17,33 +12,35 @@ def clean_data():
     * precio: precio de la electricidad en la bolsa nacional
     Este archivo contiene toda la información del 1997 a 2021.
     """
-    #raise NotImplementedError("Implementar esta función")
-    import os
     import pandas as pd
+    import glob
+    import numpy as np
 
-    contenido_raw = os.listdir('data_lake/raw')
-    anio_inicial = 1995
-    anio_final = 2021
+    ruta=glob.glob(r'data_lake/raw/*.csv')
 
-    archivo_inicial = pd.read_csv(f'data_lake/raw/{anio_inicial}.csv')
+    lista=[]
 
-    for elemento in range(anio_inicial + 1, anio_final + 1, 1):
-        if elemento == anio_inicial + 1:
-            archivo = pd.read_csv(f'data_lake/raw/{elemento}.csv')
-            archivo_concat = pd.concat([archivo_inicial, archivo], ignore_index = True)
-        else:
-            archivo = pd.read_csv(f'data_lake/raw/{elemento}.csv')
-            archivo_concat = pd.concat([archivo_concat, archivo], ignore_index = True)
+    for archivo in ruta:
+        df=pd.read_csv(archivo,index_col=None,header=0)
+        lista.append(df)
+    
+    archivo_completo=pd.concat(lista,axis=0,ignore_index=True)
 
-    archivo_concat.columns = ['fecha', '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
+    archivo_completo=archivo_completo[archivo_completo["Fecha"].notnull()]
+    archivo_completo=pd.melt(archivo_completo,id_vars=['Fecha'],var_name='hora', value_name='precio')
+    archivo_completo['hora']=np.where(pd.to_numeric(archivo_completo['hora']) <= 9,pd.concat(["0"+archivo_completo['hora']]),archivo_completo['hora'])
+    archivo_completo["Fecha"] = pd.to_datetime(archivo_completo["Fecha"]).dt.strftime('%Y-%m-%d')
+    date1="2017-01-01"
+    date2 = "2021-12-31"
+    month_list = [i.strftime('%Y-%m-%d') for i in pd.date_range(start=date1, end=date2)]
+    archivo_completo=archivo_completo[archivo_completo.Fecha.isin(month_list)]
+    archivo_completo=archivo_completo.rename(columns={"Fecha":"fecha"})
+    archivo_completo.to_csv("data_lake/cleansed/precios-horarios.csv",index=False, header=True)
 
-    archivo_concat_melt = pd.melt(archivo_concat, id_vars = ['fecha'], value_vars = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'], var_name = 'hora', value_name = 'precio')
-    archivo_concat_melt = archivo_concat_melt.sort_values(by=['fecha', 'hora'])
-    archivo_concat_melt = archivo_concat_melt[archivo_concat_melt['fecha'].notnull()]
+    return
 
-    archivo_concat_melt.to_csv(f'data_lake/cleansed/precios-horarios.csv', header = True, index = False)
+    raise NotImplementedError("Implementar esta función")
 
-    return 'melo'
 
 if __name__ == "__main__":
     import doctest
