@@ -10,44 +10,52 @@ obteniendo unos precios promedio diarios pronosticados
 """
 
 
-def test_train_datasets_1(data_frame, porcentaje):
-    n = round(len(data_frame)*porcentaje)
-    data_train = data_frame[:-n]
-    data_test  = data_frame[-n:]
-    return data_train, data_test
-
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.neural_network import MLPRegressor
+import pickle
 
 def train_daily_model():
-    """Entrena el modelo de pronóstico de precios diarios.
-    Con las features entrene el modelo de proóstico de precios diarios y
-    salvelo en models/precios-diarios.pkl
     """
-    #raise NotImplementedError("Implementar esta función")
-    import os
-    import pickle
-    import pandas as pd
-    import statsmodels.api as st
+    Entrena el modelo de pronóstico de precios diarios.
+    """
+    # raise NotImplementedError("Implementar esta función")
+   
+    #cwd = os.getcwd()
+    try:
+        path = "data_lake/business/features/precios-diarios.csv"
+        #path_model = "models/precios-diarios.pkl"
+        df = pd.read_csv(path)
+        data=list(df['Precio'])
 
-    precios_diarios = pd.read_csv('data_lake/business/features/precios_diarios.csv')
-    precios_diarios['fecha'] = pd.to_datetime(precios_diarios['fecha'], format='%Y-%m-%d')
-    precios_diarios['dia_mes'] = pd.to_numeric(precios_diarios['dia_mes'])
-    precios_diarios = precios_diarios.set_index('fecha')
-    precios_diarios = precios_diarios.asfreq('D')
-    precios_diarios = precios_diarios.sort_index()
-    precios_diarios.index = pd.DatetimeIndex(precios_diarios.index).to_period('D')
+        data_d1 = [data[t] - data[t - 1] for t in range(1, len(data))]
+        data_d1d12 = [data_d1[t] - data_d1[t - 7] for t in range(7, len(data_d1))]
+        scaler = MinMaxScaler()
+        data_d1d12_scaled = scaler.fit_transform(np.array(data_d1d12).reshape(-1, 1))
+        data_d1d12_scaled = [u[0] for u in data_d1d12_scaled]
+        P = 7
+        X = []
+        for t in range(P - 1, len(data_d1d12_scaled) - 1):
+            X.append([data_d1d12_scaled[t - n] for n in range(P)])
+        #d = data_d1d12_scaled[P:]
+        H = 5  # Se escoge arbitrariamente
 
-    # Se parten los datos para entrenamiento y prueba
-    data_train, data_test = test_train_datasets_1(precios_diarios, 0.3)
+        np.random.seed(123456)
 
-    forecaster = st.tsa.statespace.SARIMAX(
-    endog = data_train[['precio']],
-    exog = data_train[['dia_mes']],
-    enforce_stationarity = False,
-    enforce_invertibility = False,
-    )
-
-    model = forecaster.fit()
-    pickle.dump(model, open('src/models/precios-diarios.pkl', 'wb'))
+        mlp = MLPRegressor(
+            hidden_layer_sizes=(H,),
+            activation="tanh",
+            learning_rate="adaptive",
+            momentum=0.0,
+            learning_rate_init=0.002,
+            max_iter=100000,
+        )
+        mlp.fit(X[0:8675], data_d1d12_scaled[0:8675]) 
+        pickle.dump(mlp, open("src/models/precios-diarios.pkl", 'wb'))
+    
+    except: # pylint: disable=W0702
+        return None
 
 if __name__ == "__main__":
     import doctest
