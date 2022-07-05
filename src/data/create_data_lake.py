@@ -2,17 +2,13 @@
 Modulo de creación de directorios
 ----------------------------------------
 Este modulo crea el esquema de carpetas que servirán para contener los diferentes datos y resultados
-
 >>> create_data_lake()
-
 """
 
-#def create_data_lake():
+def create_data_lake():
     """Cree el data lake con sus capas.
-
     Esta función debe crear la carpeta `data_lake` en la raiz del proyecto. El data lake contiene
     las siguientes subcarpetas:
-    
     ```
     .
     |
@@ -26,24 +22,20 @@ Este modulo crea el esquema de carpetas que servirán para contener los diferent
               |___ features/
               |___ forecasts/
     ```
-
-
-
     """
     #raise NotImplementedError("Implementar esta función")
 
-    def create_data_lake():
-    
     import os
 
-    os.mkdir("./data_lake")
-    carpetas = ["landing", "raw", "cleansed","business"]
-    carpetas_business = ["reports", "features", "forecasts"]
-    [os.mkdir(os.path.join("data_lake/", c)) for c in carpetas]
-    [os.mkdir(os.path.join("data_lake/business/", c)) for c in carpetas_business]
-    os.mkdir("./data_lake/business/reports/figures")
-    return
-    raise NotImplementedError("Implementar esta función")
+    os.mkdir('data_lake')
+    os.mkdir('data_lake/landing')
+    os.mkdir('data_lake/raw')
+    os.mkdir('data_lake/cleansed')
+    os.mkdir('data_lake/business')
+    os.mkdir('data_lake/business/reports')
+    os.mkdir('data_lake/business/reports/figures')
+    os.mkdir('data_lake/business/features')
+    os.mkdir('data_lake/business/forecasts')
 
 if __name__ == "__main__":
     import doctest
